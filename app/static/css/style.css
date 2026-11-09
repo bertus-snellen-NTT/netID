@@ -1,0 +1,9 @@
+body { padding-top: 20px; background-color: #f8f9fa; }
+.card { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 20px; }
+.card-header { border-radius: 10px 10px 0 0 !important; }
+.jumbotron { background-color: #ffffff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); margin-bottom: 30px; }
+.footer { margin-top: 50px; padding: 20px 0; background-color: #343a40; color: #ffffff; }
+.navbar { border-radius: 0; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+.list-group-item { border-left: none; border-right: none; }
+.list-group-item:first-child { border-top: none; }
+.list-group-item:last-child { border-bottom: none; }
