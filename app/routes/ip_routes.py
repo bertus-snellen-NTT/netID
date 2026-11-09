@@ -8,7 +8,8 @@ from app.services.ip_service import (
     validate_ip_address,
     get_reverse_dns,
     get_ip_geolocation,
-    get_ip_network_info
+    get_ip_network_info,
+    get_ip_whois_info
 )
 
 ip_routes = Blueprint('ip', __name__, template_folder='../templates')
@@ -107,6 +108,28 @@ def ip_network():
                          ip_address=None,
                          prefix_length=24,
                          network_result=None,
+                         validation=None)
+
+
+@ip_routes.route('/whois', methods=['GET', 'POST'])
+def ip_whois():
+    """Get WHOIS information for an IP address."""
+    if request.method == 'POST':
+        ip_address = request.form.get('ip_address', '')
+    else:
+        ip_address = request.args.get('ip_address', '')
+    
+    if ip_address:
+        whois_result = get_ip_whois_info(ip_address)
+        validation = validate_ip_address(ip_address)
+        return render_template('ip/whois.html',
+                             ip_address=ip_address,
+                             whois_result=whois_result,
+                             validation=validation)
+    
+    return render_template('ip/whois.html',
+                         ip_address=None,
+                         whois_result=None,
                          validation=None)
 
 

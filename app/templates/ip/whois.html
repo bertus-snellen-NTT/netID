@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}IP WHOIS Lookup{% endblock %}
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">IP WHOIS Lookup</h1>
+    <p class="lead">Query IANA WHOIS to find the registrar and get detailed information.</p>
+</div>
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white"><h4 class="mb-0">WHOIS Lookup</h4></div>
+            <div class="card-body">
+                <form action="" method="POST" class="row g-3">
+                    <div class="col-md-10">
+                        <input type="text" class="form-control form-control-lg" name="ip_address" placeholder="Enter public IP address..." value="{{ ip_address if ip_address else '' }}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Lookup</button>
+                    </div>
+                </form>
+                <div class="alert alert-info mt-3">
+                    This function queries IANA WHOIS to find the appropriate RIR, then queries the RIR's WHOIS server for detailed information.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if ip_address %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white"><h4 class="mb-0">WHOIS Results for {{ ip_address }}</h4></div>
+            <div class="card-body">
+                {% if whois_result.error %}
+                <div class="alert alert-danger"><strong>Error:</strong> {{ whois_result.error }}</div>
+                {% else %}
+                {% if whois_result.is_public %}
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Registrar Information</h5>
+                        <table class="table table-striped">
+                            <tr><th>RIR:</th><td><span class="badge bg-primary">{{ whois_result.rir if whois_result.rir else 'Unknown' }}</span></td></tr>
+                            <tr><th>Registrar:</th><td>{{ whois_result.registrar if whois_result.registrar else 'Unknown' }}</td></tr>
+                            <tr><th>WHOIS Server:</th><td><code>{{ whois_result.rir_server if whois_result.rir_server else 'Unknown' }}</code></td></tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>IP Status</h5>
+                        <table class="table table-striped">
+                            <tr><th>Public IP:</th><td><span class="badge bg-success">Yes</span></td></tr>
+                            {% if validation and validation.valid %}
+                            <tr><th>Type:</th><td><span class="badge bg-info">{{ validation.type }}</span></td></tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+                {% if whois_result.details %}
+                <hr>
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h5>RIR Details</h5>
+                        <table class="table table-striped">
+                            {% if whois_result.details.netname %}
+                            <tr><th>NetName:</th><td>{{ whois_result.details.netname }}</td></tr>
+                            {% endif %}
+                            {% if whois_result.details.inetnum %}
+                            <tr><th>InetNum:</th><td><code>{{ whois_result.details.inetnum }}</code></td></tr>
+                            {% endif %}
+                            {% if whois_result.details.organization %}
+                            <tr><th>Organization:</th><td>{{ whois_result.details.organization }}</td></tr>
+                            {% endif %}
+                            {% if whois_result.details.country %}
+                            <tr><th>Country:</th><td>{{ whois_result.details.country }}</td></tr>
+                            {% endif %}
+                            {% if whois_result.details.status %}
+                            <tr><th>Status:</th><td><span class="badge bg-secondary">{{ whois_result.details.status }}</span></td></tr>
+                            {% endif %}
+                            {% if whois_result.details.created %}
+                            <tr><th>Created:</th><td>{{ whois_result.details.created }}</td></tr>
+                            {% endif %}
+                            {% if whois_result.details.updated %}
+                            <tr><th>Updated:</th><td>{{ whois_result.details.updated }}</td></tr>
+                            {% endif %}
+                            {% if whois_result.details.abuse_contact %}
+                            <tr><th>Abuse Contact:</th><td><code>{{ whois_result.details.abuse_contact }}</code></td></tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+                {% if whois_result.raw_iana %}
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h5>IANA WHOIS Response</h5>
+                        <pre class="bg-dark text-white p-3 rounded">{{ whois_result.raw_iana }}</pre>
+                    </div>
+                </div>
+                {% endif %}
+                {% if whois_result.raw_rir %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>RIR WHOIS Response</h5>
+                        <pre class="bg-dark text-white p-3 rounded">{{ whois_result.raw_rir }}</pre>
+                    </div>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="alert alert-warning">
+                    <strong>Not a Public IP:</strong> {{ whois_result.error if whois_result.error else 'This IP address is private or reserved' }}
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('ip.ip_whois') }}" class="btn btn-secondary">Clear</a>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back to Home</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
