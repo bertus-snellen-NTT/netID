@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}IP Geolocation{% endblock %}
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">IP Geolocation</h1>
+    <p class="lead">Get geographic information for an IP address.</p>
+</div>
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white"><h4 class="mb-0">Geolocation Lookup</h4></div>
+            <div class="card-body">
+                <form action="" method="POST" class="row g-3">
+                    <div class="col-md-10">
+                        <input type="text" class="form-control form-control-lg" name="ip_address" placeholder="Enter IP address..." value="{{ ip_address if ip_address else '' }}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Lookup</button>
+                    </div>
+                </form>
+                <div class="alert alert-info mt-3">Note: This function requires an external geolocation API.</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if ip_address %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white"><h4 class="mb-0">Results</h4></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>IP Address</h5>
+                        {% if validation and validation.valid %}
+                        <table class="table table-striped">
+                            <tr><th>IP:</th><td><code>{{ ip_address }}</code></td></tr>
+                            <tr><th>Type:</th><td><span class="badge bg-info">{{ validation.type }}</span></td></tr>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-danger">Invalid IP: {{ validation.error if validation else 'Invalid' }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Geolocation Data</h5>
+                        {% if geo_result %}
+                        <table class="table table-striped">
+                            <tr><th>Country:</th><td>{{ geo_result.country }}</td></tr>
+                            <tr><th>Region:</th><td>{{ geo_result.region }}</td></tr>
+                            <tr><th>City:</th><td>{{ geo_result.city }}</td></tr>
+                            <tr><th>ISP:</th><td>{{ geo_result.isp }}</td></tr>
+                        </table>
+                        {% if geo_result.note %}
+                        <div class="alert alert-info mt-2">{{ geo_result.note }}</div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('ip.ip_geolocation') }}" class="btn btn-secondary">Clear</a>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Validate IP Address{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">Validate IP Address</h1>
+    <p class="lead">Check if an IP address is valid and get detailed information.</p>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">IP Address Validation</h4>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST" class="row g-3">
+                    <div class="col-md-10">
+                        <input type="text" 
+                               class="form-control form-control-lg" 
+                               name="ip_address" 
+                               placeholder="Enter IP address (e.g., 8.8.8.8 or 2001:4860:4860::8888)..." 
+                               value="{{ result.input if result else '' }}" 
+                               required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            Validate
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if result %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header {% if result.valid %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
+                <h4 class="mb-0">
+                    {% if result.valid %}
+                        Valid IP Address
+                    {% else %}
+                        Invalid IP Address
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                {% if result.valid %}
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Details</h5>
+                        <table class="table table-striped">
+                            <tr><th>Input:</th><td><code>{{ result.input }}</code></td></tr>
+                            <tr><th>Type:</th><td><span class="badge bg-info">{{ result.type }}</span></td></tr>
+                            <tr><th>Version:</th><td>IPv{{ result.version }}</td></tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Additional Information</h5>
+                        <table class="table table-striped">
+                            {% if result.version == 4 %}
+                            <tr><th>Private:</th><td>{% if result.info.is_private %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td></tr>
+                            <tr><th>Loopback:</th><td>{% if result.info.is_loopback %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td></tr>
+                            <tr><th>Link Local:</th><td>{% if result.info.is_link_local %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td></tr>
+                            <tr><th>Multicast:</th><td>{% if result.info.is_multicast %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td></tr>
+                            <tr><th>Integer:</th><td><code>{{ result.info.integer }}</code></td></tr>
+                            <tr><th>Reverse DNS:</th><td><code>{{ result.info.reverse_dns if result.info.reverse_dns else 'Not available' }}</code></td></tr>
+                            {% else %}
+                            <tr><th>Compressed:</th><td><code>{{ result.info.compressed }}</code></td></tr>
+                            <tr><th>Exploded:</th><td><code>{{ result.info.exploded }}</code></td></tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-danger">
+                    <strong>Error:</strong> {{ result.error }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('ip.ip_validate') }}" class="btn btn-secondary">Clear</a>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back to Home</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

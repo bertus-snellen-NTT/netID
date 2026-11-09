@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}IP Address Tools{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">IP Address Tools</h1>
+    <p class="lead">Validate and research IP addresses.</p>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Available IP Functions</h4>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{{ url_for('ip.ip_validate') }}" class="list-group-item list-group-item-action">
+                        <h5>Validate IP Address</h5>
+                        <p class="mb-0 text-muted">Check if an IP address is valid and get basic information.</p>
+                    </a>
+                    <a href="{{ url_for('ip.ip_reverse_dns') }}" class="list-group-item list-group-item-action">
+                        <h5>Reverse DNS Lookup</h5>
+                        <p class="mb-0 text-muted">Perform reverse DNS lookup on an IP address.</p>
+                    </a>
+                    <a href="{{ url_for('ip.ip_geolocation') }}" class="list-group-item list-group-item-action">
+                        <h5>Geolocation</h5>
+                        <p class="mb-0 text-muted">Get geographic information for an IP address.</p>
+                    </a>
+                    <a href="{{ url_for('ip.ip_network') }}" class="list-group-item list-group-item-action">
+                        <h5>Network Information</h5>
+                        <p class="mb-0 text-muted">Get network range, broadcast address, and other network information.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

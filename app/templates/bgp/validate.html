@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Validate AS Number{% endblock %}
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">Validate AS Number</h1>
+    <p class="lead">Check if a BGP Autonomous System number is valid and get detailed information.</p>
+</div>
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark"><h4 class="mb-0">AS Number Validation</h4></div>
+            <div class="card-body">
+                <form action="" method="POST" class="row g-3">
+                    <div class="col-md-10">
+                        <input type="text" class="form-control form-control-lg" name="as_number" placeholder="Enter AS number..." value="{{ result.input if result else '' }}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-warning btn-lg w-100">Validate</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% if result %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header {% if result.valid %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
+                <h4 class="mb-0">{% if result.valid %}Valid AS Number{% else %}Invalid AS Number{% endif %}</h4>
+            </div>
+            <div class="card-body">
+                {% if result.valid %}
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Details</h5>
+                        <table class="table table-striped">
+                            <tr><th>Input:</th><td><code>{{ result.input }}</code></td></tr>
+                            <tr><th>ASN:</th><td><code>AS{{ result.asn }}</code></td></tr>
+                            <tr><th>Type:</th><td><span class="badge bg-info">{{ result.type }}</span></td></tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Additional Information</h5>
+                        <table class="table table-striped">
+                            <tr><th>Name:</th><td>{{ result.info.name }}</td></tr>
+                            <tr><th>Description:</th><td>{{ result.info.description }}</td></tr>
+                            <tr><th>Country:</th><td>{{ result.info.country }}</td></tr>
+                            <tr><th>Type:</th><td><span class="badge bg-secondary">{{ result.info.type }}</span></td></tr>
+                            <tr><th>Private:</th><td>{% if result.info.is_private %}<span class="badge bg-warning">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td></tr>
+                            <tr><th>Reserved:</th><td>{% if result.info.is_reserved %}<span class="badge bg-warning">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td></tr>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-danger"><strong>Error:</strong> {{ result.error }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('bgp.bgp_validate') }}" class="btn btn-secondary">Clear</a>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

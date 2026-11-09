@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Network Information{% endblock %}
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">Network Information</h1>
+    <p class="lead">Get network range, broadcast address, and other network information.</p>
+</div>
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white"><h4 class="mb-0">Network Information Lookup</h4></div>
+            <div class="card-body">
+                <form action="" method="POST" class="row g-3">
+                    <div class="col-md-8">
+                        <input type="text" class="form-control form-control-lg" name="ip_address" placeholder="Enter IP address..." value="{{ ip_address if ip_address else '' }}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control form-control-lg" name="prefix_length" placeholder="Prefix" value="{{ prefix_length if prefix_length else 24 }}" min="0" max="128">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Calculate</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% if ip_address %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white"><h4 class="mb-0">Results</h4></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>IP Address</h5>
+                        {% if validation and validation.valid %}
+                        <table class="table table-striped">
+                            <tr><th>IP:</th><td><code>{{ ip_address }}</code></td></tr>
+                            <tr><th>Type:</th><td><span class="badge bg-info">{{ validation.type }}</span></td></tr>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-danger">Invalid IP: {{ validation.error if validation else 'Invalid' }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Network Config</h5>
+                        <table class="table table-striped">
+                            <tr><th>Prefix:</th><td><code>/{{ prefix_length }}</code></td></tr>
+                        </table>
+                    </div>
+                </div>
+                {% if network_result and not network_result.error %}
+                <hr>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Network Details</h5>
+                        <table class="table table-striped">
+                            <tr><th>Network:</th><td><code>{{ network_result.network }}</code></td></tr>
+                            {% if network_result.broadcast %}
+                            <tr><th>Broadcast:</th><td><code>{{ network_result.broadcast }}</code></td></tr>
+                            {% endif %}
+                            {% if network_result.first_host %}
+                            <tr><th>First Host:</th><td><code>{{ network_result.first_host }}</code></td></tr>
+                            {% endif %}
+                            {% if network_result.last_host %}
+                            <tr><th>Last Host:</th><td><code>{{ network_result.last_host }}</code></td></tr>
+                            {% endif %}
+                            <tr><th>Total Addresses:</th><td><code>{{ network_result.total_hosts }}</code></td></tr>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('ip.ip_network') }}" class="btn btn-secondary">Clear</a>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

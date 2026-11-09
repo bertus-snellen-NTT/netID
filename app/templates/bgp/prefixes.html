@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}AS Prefixes{% endblock %}
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">AS Prefixes</h1>
+    <p class="lead">View IP prefixes announced by a BGP Autonomous System.</p>
+</div>
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark"><h4 class="mb-0">IP Prefixes Lookup</h4></div>
+            <div class="card-body">
+                <form action="" method="POST" class="row g-3">
+                    <div class="col-md-10">
+                        <input type="text" class="form-control form-control-lg" name="as_number" placeholder="Enter AS number..." value="{{ as_number if as_number else '' }}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-warning btn-lg w-100">Get Prefixes</button>
+                    </div>
+                </form>
+                <div class="alert alert-info mt-3">Note: Requires a BGP API for real data.</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if as_number %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white"><h4 class="mb-0">IP Prefixes for AS{{ as_number }}</h4></div>
+            <div class="card-body">
+                {% if validation and validation.valid %}
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>AS Information</h5>
+                        <table class="table table-striped">
+                            <tr><th>ASN:</th><td><code>AS{{ validation.asn }}</code></td></tr>
+                            <tr><th>Type:</th><td><span class="badge bg-info">{{ validation.type }}</span></td></tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Prefix Summary</h5>
+                        <table class="table table-striped">
+                            <tr><th>Total:</th><td><code>{{ prefixes_result.total_prefixes }}</code></td></tr>
+                            <tr><th>IPv4:</th><td><code>{{ prefixes_result.ipv4_prefixes|length }}</code></td></tr>
+                            <tr><th>IPv6:</th><td><code>{{ prefixes_result.ipv6_prefixes|length }}</code></td></tr>
+                        </table>
+                    </div>
+                </div>
+                {% if prefixes_result.note %}
+                <div class="alert alert-info">{{ prefixes_result.note }}</div>
+                {% endif %}
+                {% else %}
+                <div class="alert alert-danger">Invalid AS: {{ validation.error if validation else 'Invalid' }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('bgp.bgp_prefixes') }}" class="btn btn-secondary">Clear</a>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

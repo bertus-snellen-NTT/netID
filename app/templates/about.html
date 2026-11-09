@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}netID - About{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">About netID</h1>
+    <p class="lead">A comprehensive research tool for network identifiers.</p>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h4>What is netID?</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    netID is a web-based tool designed to help network engineers, security researchers, 
+                    and IT professionals quickly research and validate IP addresses, MAC addresses, 
+                    and BGP Autonomous System numbers.
+                </p>
+                <p class="card-text">
+                    The application provides a clean, intuitive interface with discrete functions for 
+                    each type of network identifier, making it easy to find the information you need.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">IP Address Tools</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li><strong>Validation:</strong> Check if an IP address is valid (IPv4 or IPv6)</li>
+                    <li><strong>Reverse DNS:</strong> Perform reverse DNS lookups</li>
+                    <li><strong>Geolocation:</strong> Get geographic information (requires API)</li>
+                    <li><strong>Network Info:</strong> Calculate network ranges and broadcast addresses</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">MAC Address Tools</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li><strong>Validation:</strong> Check MAC address format validity</li>
+                    <li><strong>Info:</strong> Get detailed MAC address information</li>
+                    <li><strong>Formatting:</strong> Convert between different MAC formats</li>
+                    <li><strong>Vendor Lookup:</strong> Identify the manufacturer from OUI</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">BGP AS Tools</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li><strong>Validation:</strong> Check if an AS number is valid</li>
+                    <li><strong>Info:</strong> Get detailed AS information</li>
+                    <li><strong>Prefixes:</strong> View IP prefixes announced by an AS</li>
+                    <li><strong>Peers:</strong> View BGP peers for an AS</li>
+                    <li><strong>AS Path:</strong> View sample AS paths</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h4>Architecture</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    netID follows a modular architecture with clear separation of concerns:
+                </p>
+                <ul>
+                    <li><strong>Services Layer:</strong> All business logic is contained in the <code>app/services/</code> directory with discrete functions for each operation</li>
+                    <li><strong>Routes Layer:</strong> Flask blueprints in <code>app/routes/</code> handle HTTP requests and responses</li>
+                    <li><strong>Templates:</strong> HTML templates in <code>app/templates/</code> provide the user interface</li>
+                    <li><strong>Static Files:</strong> CSS and JavaScript in <code>app/static/</code> for styling and client-side functionality</li>
+                </ul>
+                <p class="card-text mt-3">
+                    This architecture ensures that:
+                </p>
+                <ul>
+                    <li>Each function has a single responsibility</li>
+                    <li>Functions are easily testable and maintainable</li>
+                    <li>The codebase is easy to extend with new features</li>
+                    <li>Dependencies between components are minimized</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h4>Technologies Used</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Backend</h5>
+                        <ul>
+                            <li><strong>Flask:</strong> Web framework</li>
+                            <li><strong>Python:</strong> Programming language</li>
+                            <li><strong>ipaddress:</strong> IP address manipulation</li>
+                            <li><strong>socket:</strong> Network operations</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Frontend</h5>
+                        <ul>
+                            <li><strong>Bootstrap 5:</strong> CSS framework</li>
+                            <li><strong>HTML5:</strong> Markup language</li>
+                            <li><strong>Jinja2:</strong> Template engine</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

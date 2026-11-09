@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}MAC Address Tools{% endblock %}
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">MAC Address Tools</h1>
+    <p class="lead">Validate and research MAC addresses.</p>
+</div>
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white"><h4 class="mb-0">Available MAC Functions</h4></div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{{ url_for('mac.mac_validate') }}" class="list-group-item list-group-item-action">
+                        <h5>Validate MAC Address</h5>
+                        <p class="mb-0 text-muted">Check if a MAC address is valid and get basic information.</p>
+                    </a>
+                    <a href="{{ url_for('mac.mac_info') }}" class="list-group-item list-group-item-action">
+                        <h5>MAC Address Info</h5>
+                        <p class="mb-0 text-muted">Get detailed information about a MAC address.</p>
+                    </a>
+                    <a href="{{ url_for('mac.mac_format') }}" class="list-group-item list-group-item-action">
+                        <h5>Format MAC Address</h5>
+                        <p class="mb-0 text-muted">Convert between different MAC address formats.</p>
+                    </a>
+                    <a href="{{ url_for('mac.mac_vendor') }}" class="list-group-item list-group-item-action">
+                        <h5>Vendor Lookup</h5>
+                        <p class="mb-0 text-muted">Identify the manufacturer from OUI.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

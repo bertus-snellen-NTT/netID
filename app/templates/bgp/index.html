@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}BGP AS Tools{% endblock %}
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">BGP AS Tools</h1>
+    <p class="lead">Validate and research BGP Autonomous System numbers.</p>
+</div>
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark"><h4 class="mb-0">Available BGP Functions</h4></div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{{ url_for('bgp.bgp_validate') }}" class="list-group-item list-group-item-action">
+                        <h5>Validate AS Number</h5>
+                        <p class="mb-0 text-muted">Check if a BGP AS number is valid and get basic information.</p>
+                    </a>
+                    <a href="{{ url_for('bgp.bgp_info') }}" class="list-group-item list-group-item-action">
+                        <h5>AS Information</h5>
+                        <p class="mb-0 text-muted">Get detailed information about a BGP Autonomous System.</p>
+                    </a>
+                    <a href="{{ url_for('bgp.bgp_prefixes') }}" class="list-group-item list-group-item-action">
+                        <h5>IP Prefixes</h5>
+                        <p class="mb-0 text-muted">View IP prefixes announced by an AS.</p>
+                    </a>
+                    <a href="{{ url_for('bgp.bgp_peers') }}" class="list-group-item list-group-item-action">
+                        <h5>BGP Peers</h5>
+                        <p class="mb-0 text-muted">View BGP peers for an Autonomous System.</p>
+                    </a>
+                    <a href="{{ url_for('bgp.bgp_path') }}" class="list-group-item list-group-item-action">
+                        <h5>AS Path</h5>
+                        <p class="mb-0 text-muted">View sample AS paths for an Autonomous System.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

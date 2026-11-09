@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}netID - Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">Welcome to netID</h1>
+    <p class="lead">A comprehensive research tool for IP addresses, MAC addresses, and BGP Autonomous Systems.</p>
+    <hr class="my-4">
+    <p>Use the search form below to quickly look up information, or browse the available functions.</p>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Quick Search</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('main.search') }}" method="POST" class="row g-3">
+                    <div class="col-md-8">
+                        <input type="text" 
+                               class="form-control form-control-lg" 
+                               name="query" 
+                               placeholder="Enter IP, MAC, or AS number..." 
+                               required>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select form-select-lg" name="type">
+                            <option value="auto" selected>Auto Detect</option>
+                            <option value="ip">IP Address</option>
+                            <option value="mac">MAC Address</option>
+                            <option value="bgp">BGP AS Number</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="bi bi-globe"></i> IP Address Functions</h4>
+            </div>
+            <div class="card-body">
+                <p>Validate IP addresses and retrieve detailed information.</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        <a href="{{ url_for('ip.ip_validate') }}" class="text-decoration-none">
+                            <strong>validate_ip_address</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Validate an IP address and get basic information</p>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('ip.ip_reverse_dns') }}" class="text-decoration-none">
+                            <strong>get_reverse_dns</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Perform reverse DNS lookup on an IP address</p>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('ip.ip_geolocation') }}" class="text-decoration-none">
+                            <strong>get_ip_geolocation</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Get geolocation information for an IP address</p>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('ip.ip_network') }}" class="text-decoration-none">
+                            <strong>get_ip_network_info</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Get network information for an IP address</p>
+                    </li>
+                </ul>
+                <a href="{{ url_for('ip.ip_index') }}" class="btn btn-info">View All IP Tools</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-ethernet"></i> MAC Address Functions</h4>
+            </div>
+            <div class="card-body">
+                <p>Validate MAC addresses and retrieve vendor information.</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        <a href="{{ url_for('mac.mac_validate') }}" class="text-decoration-none">
+                            <strong>validate_mac_address</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Validate a MAC address and get basic information</p>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('mac.mac_info') }}" class="text-decoration-none">
+                            <strong>get_mac_info</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Get detailed information about a MAC address</p>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('mac.mac_format') }}" class="text-decoration-none">
+                            <strong>format_mac_address</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Format a MAC address with a specific separator</p>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('mac.mac_vendor') }}" class="text-decoration-none">
+                            <strong>get_mac_vendor</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Get vendor information for a MAC address</p>
+                    </li>
+                </ul>
+                <a href="{{ url_for('mac.mac_index') }}" class="btn btn-success">View All MAC Tools</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0"><i class="bi bi-diagram-3"></i> BGP AS Functions</h4>
+            </div>
+            <div class="card-body">
+                <p>Validate BGP Autonomous System numbers and retrieve routing information.</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        <a href="{{ url_for('bgp.bgp_validate') }}" class="text-decoration-none">
+                            <strong>validate_as_number</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Validate a BGP AS number and get basic information</p>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('bgp.bgp_info') }}" class="text-decoration-none">
+                            <strong>get_as_info</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Get detailed information about a BGP AS</p>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('bgp.bgp_prefixes') }}" class="text-decoration-none">
+                            <strong>get_as_prefixes</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Get IP prefixes announced by a BGP AS</p>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('bgp.bgp_peers') }}" class="text-decoration-none">
+                            <strong>get_as_peers</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Get BGP peers for an AS</p>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('bgp.bgp_path') }}" class="text-decoration-none">
+                            <strong>get_as_path</strong>
+                        </a>
+                        <p class="mb-0 text-muted small">Get sample AS paths for an AS</p>
+                    </li>
+                </ul>
+                <a href="{{ url_for('bgp.bgp_index') }}" class="btn btn-warning">View All BGP Tools</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0">Examples</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>IP Address</h5>
+                        <ul class="list-unstyled">
+                            <li><code>8.8.8.8</code> - Google DNS</li>
+                            <li><code>1.1.1.1</code> - Cloudflare DNS</li>
+                            <li><code>2001:4860:4860::8888</code> - Google DNS IPv6</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>MAC Address</h5>
+                        <ul class="list-unstyled">
+                            <li><code>00:1A:2B:3C:4D:5E</code></li>
+                            <li><code>00-1A-2B-3C-4D-5E</code></li>
+                            <li><code>001A.2B3C.4D5E</code></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>BGP AS Number</h5>
+                        <ul class="list-unstyled">
+                            <li><code>15169</code> - Google</li>
+                            <li><code>16509</code> - Amazon</li>
+                            <li><code>3356</code> - Level 3</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
