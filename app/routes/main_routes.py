@@ -11,29 +11,15 @@ from app.services.bgp_service import get_all_bgp_functions
 main_routes = Blueprint('main', __name__, template_folder='../templates')
 
 
-@main_routes.route('/')
-@main_routes.route('/index')
+@main_routes.route('/', methods=['GET', 'POST'])
+@main_routes.route('/index', methods=['GET', 'POST'])
 def index():
     """Landing page showing all available functions."""
     ip_functions = get_all_ip_functions()
     mac_functions = get_all_mac_functions()
     bgp_functions = get_all_bgp_functions()
     
-    return render_template('index.html',
-                         ip_functions=ip_functions,
-                         mac_functions=mac_functions,
-                         bgp_functions=bgp_functions)
-
-
-@main_routes.route('/about')
-def about():
-    """About page with information about the application."""
-    return render_template('about.html')
-
-
-@main_routes.route('/search', methods=['GET', 'POST'])
-def search():
-    """Global search handler that redirects to the appropriate service."""
+    # Handle form submission from the search form
     if request.method == 'POST':
         query = request.form.get('query', '').strip()
         search_type = request.form.get('type', 'auto')
@@ -41,7 +27,6 @@ def search():
         if query:
             if search_type == 'auto':
                 if is_valid_ip_format(query):
-                    # Store the IP in session and redirect to tool selection
                     session['last_ip'] = query
                     return redirect(url_for('main.select_ip_tool'))
                 elif is_valid_mac_format(query):
@@ -58,7 +43,16 @@ def search():
             elif search_type == 'bgp':
                 return redirect(url_for('bgp.bgp_validate', as_number=query))
     
-    return redirect(url_for('main.index'))
+    return render_template('index.html',
+                         ip_functions=ip_functions,
+                         mac_functions=mac_functions,
+                         bgp_functions=bgp_functions)
+
+
+@main_routes.route('/about')
+def about():
+    """About page with information about the application."""
+    return render_template('about.html')
 
 
 @main_routes.route('/select-ip-tool', methods=['GET', 'POST'])
@@ -75,20 +69,16 @@ def select_ip_tool():
         selected_tool = request.form.get('tool')
         if selected_tool:
             # Redirect to the appropriate tool with the IP
-            for func in ip_functions:
-                if func['name'] == selected_tool:
-                    # Map function name to route endpoint
-                    route_map = {
-                        'validate_ip_address': 'ip.ip_validate',
-                        'get_reverse_dns': 'ip.ip_reverse_dns',
-                        'get_ip_geolocation': 'ip.ip_geolocation',
-                        'get_ip_network_info': 'ip.ip_network',
-                        'get_ip_whois_info': 'ip.ip_whois'
-                    }
-                    endpoint = route_map.get(selected_tool)
-                    if endpoint:
-                        return redirect(url_for(endpoint, ip_address=ip_address))
-            return redirect(url_for('main.index'))
+            route_map = {
+                'validate_ip_address': 'ip.ip_validate',
+                'get_reverse_dns': 'ip.ip_reverse_dns',
+                'get_ip_geolocation': 'ip.ip_geolocation',
+                'get_ip_network_info': 'ip.ip_network',
+                'get_ip_whois_info': 'ip.ip_whois'
+            }
+            endpoint = route_map.get(selected_tool)
+            if endpoint:
+                return redirect(url_for(endpoint, ip_address=ip_address))
     
     return render_template('select_ip_tool.html',
                          ip_address=ip_address,
