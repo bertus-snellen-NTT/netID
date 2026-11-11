@@ -133,6 +133,30 @@ def ip_whois():
                          validation=None)
 
 
+@ip_routes.route('/all-tools', methods=['GET'])
+def ip_all_tools():
+    """Run all IP tools for a given IP address."""
+    ip_address = request.args.get('ip_address', '')
+    
+    if not ip_address:
+        return redirect(url_for('ip.ip_index'))
+    
+    # Run all IP tools
+    validation = validate_ip_address(ip_address)
+    dns_result = get_reverse_dns(ip_address) if validation.get('valid') else None
+    geo_result = get_ip_geolocation(ip_address) if validation.get('valid') else None
+    network_result = get_ip_network_info(ip_address, 24) if validation.get('valid') else None
+    whois_result = get_ip_whois_info(ip_address) if validation.get('valid') else None
+    
+    return render_template('ip/all_tools.html',
+                         ip_address=ip_address,
+                         validation=validation,
+                         dns_result=dns_result,
+                         geo_result=geo_result,
+                         network_result=network_result,
+                         whois_result=whois_result)
+
+
 @ip_routes.route('/api/validate', methods=['GET', 'POST'])
 def api_ip_validate():
     """API endpoint for IP validation."""

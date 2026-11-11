@@ -3,7 +3,7 @@ Main routes for the netID Flask application
 Handles the landing page and general navigation
 """
 
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from app.services.ip_service import get_all_ip_functions
 from app.services.mac_service import get_all_mac_functions
 from app.services.bgp_service import get_all_bgp_functions
@@ -41,7 +41,9 @@ def search():
         if query:
             if search_type == 'auto':
                 if is_valid_ip_format(query):
-                    return redirect(url_for('ip.ip_validate', ip_address=query))
+                    # Store the IP in session and redirect to tool selection
+                    session['last_ip'] = query
+                    return redirect(url_for('main.select_ip_tool'))
                 elif is_valid_mac_format(query):
                     return redirect(url_for('mac.mac_validate', mac_address=query))
                 elif is_valid_as_format(query):
@@ -49,12 +51,54 @@ def search():
                 else:
                     return redirect(url_for('ip.ip_validate', ip_address=query))
             elif search_type == 'ip':
-                return redirect(url_for('ip.ip_validate', ip_address=query))
+                session['last_ip'] = query
+                return redirect(url_for('main.select_ip_tool'))
             elif search_type == 'mac':
                 return redirect(url_for('mac.mac_validate', mac_address=query))
             elif search_type == 'bgp':
                 return redirect(url_for('bgp.bgp_validate', as_number=query))
     
+    return redirect(url_for('main.index'))
+
+
+@main_routes.route('/select-ip-tool', methods=['GET', 'POST'])
+def select_ip_tool():
+    """Show selection of IP tools for a specific IP address."""
+    ip_address = session.get('last_ip', '')
+    
+    if not ip_address:
+        return redirect(url_for('main.index'))
+    
+    ip_functions = get_all_ip_functions()
+    
+    if request.method == 'POST':
+        selected_tool = request.form.get('tool')
+        if selected_tool:
+            # Redirect to the appropriate tool with the IP
+            for func in ip_functions:
+                if func['name'] == selected_tool:
+                    # Map function name to route endpoint
+                    route_map = {
+                        'validate_ip_address': 'ip.ip_validate',
+                        'get_reverse_dns': 'ip.ip_reverse_dns',
+                        'get_ip_geolocation': 'ip.ip_geolocation',
+                        'get_ip_network_info': 'ip.ip_network',
+                        'get_ip_whois_info': 'ip.ip_whois'
+                    }
+                    endpoint = route_map.get(selected_tool)
+                    if endpoint:
+                        return redirect(url_for(endpoint, ip_address=ip_address))
+            return redirect(url_for('main.index'))
+    
+    return render_template('select_ip_tool.html',
+                         ip_address=ip_address,
+                         ip_functions=ip_functions)
+
+
+@main_routes.route('/clear-ip')
+def clear_ip():
+    """Clear the stored IP address from session."""
+    session.pop('last_ip', None)
     return redirect(url_for('main.index'))
 
 

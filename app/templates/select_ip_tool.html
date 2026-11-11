@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Select IP Tool{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">IP Tool Selection</h1>
+    <p class="lead">Select which tool to run for IP address: <code>{{ ip_address }}</code></p>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Available IP Tools</h4>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST" class="row g-3">
+                    <div class="col-md-12">
+                        <p>Choose one of the following tools to run with IP address <code>{{ ip_address }}</code>:</p>
+                        <div class="list-group mb-3">
+                            {% for func in ip_functions %}
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tool" id="tool_{{ loop.index }}" value="{{ func.name }}" required>
+                                    <label class="form-check-label" for="tool_{{ loop.index }}">
+                                        <strong>{{ func.name }}</strong>
+                                    </label>
+                                </div>
+                                <p class="mb-0 text-muted small ms-4">{{ func.description }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            Run Selected Tool
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ url_for('main.clear_ip') }}" class="btn btn-secondary btn-lg w-100">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Quick Run All</h4>
+            </div>
+            <div class="card-body">
+                <p>Want to run all IP tools at once? Click the button below:</p>
+                <a href="{{ url_for('ip.ip_all_tools', ip_address=ip_address) }}" class="btn btn-info btn-lg">
+                    Run All IP Tools
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

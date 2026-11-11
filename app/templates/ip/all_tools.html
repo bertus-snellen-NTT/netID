@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}All IP Tools - {{ ip_address }}{% endblock %}
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">All IP Tools Results</h1>
+    <p class="lead">Complete analysis for IP address: <code>{{ ip_address }}</code></p>
+</div>
+
+{% if validation and validation.valid %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">IP Address Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-striped">
+                            <tr><th>IP Address:</th><td><code>{{ ip_address }}</code></td></tr>
+                            <tr><th>Type:</th><td><span class="badge bg-info">{{ validation.type }}</span></td></tr>
+                            <tr><th>Version:</th><td>IPv{{ validation.version }}</td></tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-striped">
+                            <tr><th>Private:</th><td>{% if validation.info.is_private %}<span class="badge bg-warning">Yes</span>{% else %}<span class="badge bg-success">No</span>{% endif %}</td></tr>
+                            <tr><th>Loopback:</th><td>{% if validation.info.is_loopback %}<span class="badge bg-warning">Yes</span>{% else %}<span class="badge bg-success">No</span>{% endif %}</td></tr>
+                            <tr><th>Reserved:</th><td>{% if validation.info.is_reserved %}<span class="badge bg-warning">Yes</span>{% else %}<span class="badge bg-success">No</span>{% endif %}</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Validation</h5>
+            </div>
+            <div class="card-body">
+                {% if validation %}
+                <p class="card-text">
+                    {% if validation.valid %}
+                    <span class="badge bg-success">Valid IP Address</span>
+                    {% else %}
+                    <span class="badge bg-danger">Invalid IP Address</span>
+                    {% endif %}
+                </p>
+                {% if validation.error %}
+                <div class="alert alert-danger">{{ validation.error }}</div>
+                {% endif %}
+                {% else %}
+                <p class="card-text text-muted">No validation performed</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Reverse DNS</h5>
+            </div>
+            <div class="card-body">
+                {% if dns_result %}
+                <p class="card-text"><code>{{ dns_result }}</code></p>
+                {% else %}
+                <p class="card-text text-muted">No reverse DNS record found</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Geolocation</h5>
+            </div>
+            <div class="card-body">
+                {% if geo_result %}
+                <table class="table table-sm">
+                    <tr><th>Country:</th><td>{{ geo_result.country }}</td></tr>
+                    <tr><th>Region:</th><td>{{ geo_result.region }}</td></tr>
+                    <tr><th>City:</th><td>{{ geo_result.city }}</td></tr>
+                    <tr><th>ISP:</th><td>{{ geo_result.isp }}</td></tr>
+                </table>
+                <p class="text-muted small">{{ geo_result.note }}</p>
+                {% else %}
+                <p class="card-text text-muted">Geolocation data not available</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Network Info (/24)</h5>
+            </div>
+            <div class="card-body">
+                {% if network_result and not network_result.error %}
+                <table class="table table-sm">
+                    <tr><th>Network:</th><td><code>{{ network_result.network }}</code></td></tr>
+                    {% if network_result.broadcast %}
+                    <tr><th>Broadcast:</th><td><code>{{ network_result.broadcast }}</code></td></tr>
+                    {% endif %}
+                    <tr><th>Total Hosts:</th><td><code>{{ network_result.total_hosts }}</code></td></tr>
+                </table>
+                {% else %}
+                <p class="card-text text-muted">Network info not available</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">WHOIS Information</h5>
+            </div>
+            <div class="card-body">
+                {% if whois_result %}
+                {% if whois_result.error %}
+                <div class="alert alert-warning">{{ whois_result.error }}</div>
+                {% else %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Registrar</h6>
+                        <table class="table table-sm">
+                            <tr><th>RIR:</th><td><span class="badge bg-primary">{{ whois_result.rir if whois_result.rir else 'Unknown' }}</span></td></tr>
+                            <tr><th>Registrar:</th><td>{{ whois_result.registrar if whois_result.registrar else 'Unknown' }}</td></tr>
+                            <tr><th>Server:</th><td><code>{{ whois_result.rir_server if whois_result.rir_server else 'Unknown' }}</code></td></tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Details</h6>
+                        <table class="table table-sm">
+                            {% if whois_result.details.netname %}
+                            <tr><th>NetName:</th><td>{{ whois_result.details.netname }}</td></tr>
+                            {% endif %}
+                            {% if whois_result.details.organization %}
+                            <tr><th>Organization:</th><td>{{ whois_result.details.organization }}</td></tr>
+                            {% endif %}
+                            {% if whois_result.details.country %}
+                            <tr><th>Country:</th><td>{{ whois_result.details.country }}</td></tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back to Home</a>
+        <a href="{{ url_for('ip.ip_validate', ip_address=ip_address) }}" class="btn btn-secondary">Run Individual Tools</a>
+    </div>
+</div>
+{% endblock %}
